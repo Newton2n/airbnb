@@ -8,7 +8,7 @@ const startServer = async () => {
   try {
     await connectDB();
     const server = app.listen(PORT, () => {
-      console.log(`🚀 Server running on port ${PORT}...`);
+      console.log(` Server running on port ${PORT}...`);
     });
   } catch (error) {
     console.log("failed to start serve due to db problem");
