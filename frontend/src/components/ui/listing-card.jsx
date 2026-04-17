@@ -5,7 +5,7 @@ export default function ListingCard({ home, admin }) {
   const router = useRouter();
 
   const handleCardLink = () => {
-    router.push(`/home-details/${home.id}`);
+    router.push(`/home-details/${home._id}`);
   };
 
   return (
@@ -33,7 +33,7 @@ export default function ListingCard({ home, admin }) {
             ${home.price}
           </span>
           <span className="text-xs sm:text-sm text-gray-600">per night</span>
-          {admin && <AdminButton homeId={home.id} />}
+          {admin && <AdminButton homeId={home._id} />}
         </div>
       </div>
     </div>

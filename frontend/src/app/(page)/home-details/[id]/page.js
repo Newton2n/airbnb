@@ -2,22 +2,29 @@
 import { mockHomes } from "@/lib/mockData";
 import Header from "@/components/ui/header";
 import Footer from "@/components/ui/footer";
-import {
-  ArrowLeft,
-  Star,
-  MapPin,
-  Users,
-  MountainSnow,
-  Wifi,
-  ChefHat,
-} from "lucide-react";
+import { ArrowLeft, Star, MapPin } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { useState, useEffect } from "react";
 
 export default function HomeDetails() {
   const params = useParams();
-  const homeId = parseInt(params.id);
-  const home = mockHomes.find((h) => h.id === homeId);
+  const homeId = params.id;
+  console.log("home id ", homeId);
+  const [home, setHome] = useState([]);
+
+  useEffect(() => {
+    const getData = async () => {
+      const response = await fetch(
+        `http://localhost:5000/admin/get-home-details/${homeId}`,
+      );
+      const homeDetails = await response.json();
+      console.log(homeDetails, "Home details");
+
+      setHome(homeDetails.homeDetails);
+    };
+    getData();
+  }, [homeId]);
 
   if (!home) {
     return (
@@ -38,8 +45,6 @@ export default function HomeDetails() {
       </>
     );
   }
-
-
 
   return (
     <>
@@ -92,17 +97,13 @@ export default function HomeDetails() {
             </div>
           </div>
 
-         
-
           {/* Description */}
           <div className="mb-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">About</h2>
             <p className="text-gray-700 text-lg leading-relaxed mb-6">
               {home.description}
             </p>
-           
           </div>
-
 
           {/* Pricing and Booking */}
           <div className="bg-gray-50 rounded-lg p-8 mb-8">
@@ -152,8 +153,6 @@ export default function HomeDetails() {
               </div>
             </div>
           </div>
-
-          
         </div>
       </main>
       <Footer />

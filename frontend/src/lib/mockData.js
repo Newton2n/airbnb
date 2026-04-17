@@ -34,3 +34,4 @@ export const mockHomes = [
       "Beautiful cozy apartment in the heart of downtown. Perfect for couples or small families.",
   },
 ];
+

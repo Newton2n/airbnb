@@ -1,10 +1,14 @@
-"use client";
 import Header from "@/components/ui/header";
 import ListingCard from "@/components/ui/listing-card";
 import Footer from "@/components/ui/footer";
 import { mockHomes } from "@/lib/mockData";
 
-export default function Home() {
+export default async function Home() {
+  const response = await fetch("http://localhost:5000/admin/get-homes");
+  const data = await response.json();
+  const homeList = data.homeData;
+  
+
   return (
     <>
       <header>
@@ -22,9 +26,10 @@ export default function Home() {
 
           {/* Listings Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6">
-            {mockHomes.map((home) => (
-              <ListingCard key={home.id} home={home} admin={false} />
-            ))}
+            {homeList&&
+              homeList.map((home) => (
+                <ListingCard key={home._id} home={home} admin={false} />
+              ))}
           </div>
         </div>
       </main>
