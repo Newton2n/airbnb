@@ -4,70 +4,36 @@ import Footer from "@/components/ui/footer";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function CreateHome() {
-  const [formData, setFormData] = useState({
-    title: "",
-    location: "",
-    price: "",
-    bedrooms: "",
-    bathrooms: "",
-    guests: "",
-    description: "",
-    amenities: [],
-  });
+  const router = useRouter();
 
-  const amenitiesList = [
-    "WiFi",
-    "Kitchen",
-    "AC",
-    "Heating",
-    "TV",
-    "Parking",
-    "Pool",
-    "Beach Access",
-    "Hot Tub",
-    "Gym",
-    "Fireplace",
-    "Jacuzzi",
-    "Roof Deck",
-    "Laundry",
-    "Mountain View",
-    "Workspace",
-    "Outdoor Shower",
-  ];
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleAmenityToggle = (amenity) => {
-    setFormData((prev) => ({
-      ...prev,
-      amenities: prev.amenities.includes(amenity)
-        ? prev.amenities.filter((a) => a !== amenity)
-        : [...prev.amenities, amenity],
-    }));
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    alert("Home created successfully! (This is a demo)");
-    setFormData({
-      title: "",
-      location: "",
-      price: "",
-      bedrooms: "",
-      bathrooms: "",
-      guests: "",
-      description: "",
-      amenities: [],
+    let formData = {
+      title: e.target.title.value,
+      location: e.target.location.value,
+      price: e.target.price.value,
+      image: e.target.image.value,
+      description: e.target.description.value,
+    };
+    console.log("form data", formData);
+    const response = await fetch("http://localhost:5000/admin/create-home", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
     });
+
+    console.log("Response ", response);
+    if (response.ok) {
+      console.log("Home created ");
+      e.target.reset();
+      formData = {};
+      router.push("/");
+    } else {
+      console.log("something went wrong");
+    }
   };
 
   return (
@@ -114,8 +80,6 @@ export default function CreateHome() {
                   <input
                     type="text"
                     name="title"
-                    value={formData.title}
-                    onChange={handleChange}
                     placeholder="e.g., Cozy Downtown Apartment"
                     className="w-full border text-black border-gray-300 rounded-lg px-3 sm:px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500 cursor-text"
                     required
@@ -130,8 +94,6 @@ export default function CreateHome() {
                   <input
                     type="text"
                     name="location"
-                    value={formData.location}
-                    onChange={handleChange}
                     placeholder="e.g., San Francisco, California"
                     className="w-full border text-black border-gray-300 rounded-lg px-3 sm:px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500 cursor-text"
                     required
@@ -146,9 +108,19 @@ export default function CreateHome() {
                   <input
                     type="number"
                     name="price"
-                    value={formData.price}
-                    onChange={handleChange}
                     placeholder="150"
+                    className="w-full border text-black border-gray-300 rounded-lg px-3 sm:px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500 cursor-text"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs sm:text-sm font-semibold text-gray-900 mb-2">
+                    Image Url
+                  </label>
+                  <input
+                    type="text"
+                    name="image"
+                    placeholder="image.com"
                     className="w-full border text-black border-gray-300 rounded-lg px-3 sm:px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500 cursor-text"
                     required
                   />
@@ -162,8 +134,6 @@ export default function CreateHome() {
                 </label>
                 <textarea
                   name="description"
-                  value={formData.description}
-                  onChange={handleChange}
                   placeholder="Describe your home, its features, and what makes it special..."
                   rows="5"
                   className="w-full border text-black border-gray-300 rounded-lg px-3 sm:px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500 cursor-text"

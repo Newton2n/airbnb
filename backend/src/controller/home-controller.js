@@ -3,17 +3,21 @@ import Home from "../model/home.js";
 //create home
 export const createHome = async (req, res, next) => {
   const { title, location, price, image, description } = req.body;
-  console.log(title, location, price, image, description);
-  const newHome = new Home({
-    title,
-    location,
-    price,
-    image,
-    description,
-  });
-  await newHome.save();
-  console.log("Home created");
-  res.status(201).json({ message: "Resource created successfully" });
+  console.log("All data",title, location, price, image, description);
+  try {
+    const newHome =await new Home({
+      title,
+      location,
+      price,
+      image,
+      description,
+    });
+    await newHome.save();
+    console.log("Home created");
+    res.status(201).json({ message: "Resource created successfully" });
+  } catch (error) {
+    throw new Error("Something went wrong to create home", error);
+  }
 };
 
 // fetch all data
